@@ -1,0 +1,64 @@
+A. THRESHOLD PERFORMANCE (95% bootstrap CI)
+  KFRE-NA       >= 5%: flagged 449 (42.5%); events captured 88/90
+      Sens 0.978 (0.941-1.000)  Spec 0.628 (0.599-0.659)  PPV 0.196 (0.161-0.234)  NPV 0.997 (0.992-1.000)  NNR 5.09 (4.27-6.22)
+  KFRE-NA       >= 10%: flagged 325 (30.7%); events captured 87/90
+      Sens 0.967 (0.923-1.000)  Spec 0.755 (0.728-0.783)  PPV 0.268 (0.223-0.319)  NPV 0.996 (0.991-1.000)  NNR 3.73 (3.14-4.48)
+  KFRE-NA       >= 20%: flagged 205 (19.4%); events captured 78/90
+      Sens 0.867 (0.789-0.936)  Spec 0.868 (0.848-0.889)  PPV 0.380 (0.317-0.446)  NPV 0.986 (0.977-0.993)  NNR 2.63 (2.24-3.15)
+  KFRE-NA       >= 40%: flagged 106 (10.0%); events captured 62/90
+      Sens 0.689 (0.595-0.778)  Spec 0.954 (0.941-0.968)  PPV 0.585 (0.494-0.675)  NPV 0.970 (0.959-0.981)  NNR 1.71 (1.48-2.02)
+  KFRE-nonNA    >= 5%: flagged 381 (36.0%); events captured 88/90
+      Sens 0.978 (0.941-1.000)  Spec 0.698 (0.669-0.728)  PPV 0.231 (0.191-0.276)  NPV 0.997 (0.993-1.000)  NNR 4.32 (3.63-5.23)
+  KFRE-nonNA    >= 10%: flagged 263 (24.9%); events captured 86/90
+      Sens 0.956 (0.905-0.991)  Spec 0.817 (0.794-0.843)  PPV 0.327 (0.274-0.385)  NPV 0.995 (0.989-0.999)  NNR 3.06 (2.60-3.65)
+  KFRE-nonNA    >= 20%: flagged 155 (14.7%); events captured 74/90
+      Sens 0.822 (0.736-0.897)  Spec 0.916 (0.898-0.933)  PPV 0.477 (0.404-0.556)  NPV 0.982 (0.973-0.990)  NNR 2.09 (1.80-2.48)
+  KFRE-nonNA    >= 40%: flagged 69 (6.5%); events captured 47/90
+      Sens 0.522 (0.421-0.623)  Spec 0.977 (0.968-0.986)  PPV 0.681 (0.579-0.788)  NPV 0.956 (0.943-0.968)  NNR 1.47 (1.27-1.73)
+  TH-KFRE v1.0  >= 5%: flagged 285 (27.0%); events captured 86/90
+      Sens 0.956 (0.905-0.991)  Spec 0.796 (0.769-0.821)  PPV 0.303 (0.252-0.358)  NPV 0.995 (0.988-0.999)  NNR 3.30 (2.79-3.98)
+  TH-KFRE v1.0  >= 10%: flagged 200 (18.9%); events captured 78/90
+      Sens 0.867 (0.789-0.936)  Spec 0.873 (0.854-0.894)  PPV 0.390 (0.326-0.456)  NPV 0.986 (0.977-0.993)  NNR 2.56 (2.19-3.07)
+  TH-KFRE v1.0  >= 20%: flagged 133 (12.6%); events captured 71/90
+      Sens 0.789 (0.704-0.866)  Spec 0.936 (0.919-0.951)  PPV 0.534 (0.455-0.618)  NPV 0.979 (0.969-0.988)  NNR 1.87 (1.62-2.20)
+  TH-KFRE v1.0  >= 40%: flagged 70 (6.6%); events captured 47/90
+      Sens 0.522 (0.421-0.623)  Spec 0.976 (0.967-0.985)  PPV 0.671 (0.569-0.780)  NPV 0.956 (0.943-0.968)  NNR 1.49 (1.28-1.76)
+
+B. RISK CATEGORIES (predicted vs observed 2-y incidence)
+       model category   n  events  mean_predicted  observed_AJ
+     KFRE-NA     <10% 732       3           0.023        0.004
+     KFRE-NA  10-<40% 219      25           0.208        0.115
+     KFRE-NA    >=40% 106      62           0.670        0.585
+  KFRE-nonNA     <10% 794       4           0.021        0.005
+  KFRE-nonNA  10-<40% 194      39           0.202        0.201
+  KFRE-nonNA    >=40%  69      47           0.662        0.681
+TH-KFRE v1.0     <10% 857      12           0.014        0.014
+TH-KFRE v1.0  10-<40% 130      31           0.209        0.238
+TH-KFRE v1.0    >=40%  70      47           0.728        0.671
+
+RECLASSIFICATION (rows: published KFRE category; columns: TH-KFRE category; n [events])
+  vs KFRE-nonNA:
+    THKFRE_category        <10%   10-<40%    >=40%
+    reference_category                            
+    <10%                794 [4]     0 [0]    0 [0]
+    10-<40%              63 [8]  130 [31]    1 [0]
+    >=40%                 0 [0]     0 [0]  69 [47]
+    patients changing category: 64 (6.1%); events among them: 8
+  vs KFRE-NA:
+    THKFRE_category        <10%  10-<40%    >=40%
+    reference_category                           
+    <10%                732 [3]    0 [0]    0 [0]
+    10-<40%             125 [9]  94 [16]    0 [0]
+    >=40%                 0 [0]  36 [15]  70 [47]
+    patients changing category: 161 (15.2%); events among them: 24
+  Moved from >=10% (KFRE-nonNA) to <10% (TH-KFRE): n = 63, TH-KFRE mean predicted 0.076, KFRE-nonNA mean predicted 0.117, observed 0.127 (8 events)
+
+C. NET BENEFIT at key thresholds (difference TH-KFRE minus KFRE-nonNA, 95% bootstrap CI)
+ threshold  NB_THKFRE  NB_KFRE_nonNA  NB_KFRE_NA  NB_treat_all  diff_THKFRE_minus_nonNA  diff_lo  diff_hi  net_extra_true_positives_per_1000
+    0.0500     0.0717         0.0689      0.0654        0.0371                   0.0029  -0.0003   0.0052                             2.8569
+    0.1000     0.0610         0.0628      0.0575       -0.0164                  -0.0018  -0.0079   0.0030                            -1.8322
+    0.2000     0.0525         0.0509      0.0438       -0.1434                   0.0017  -0.0024   0.0050                             1.6556
+    0.4000     0.0300         0.0306      0.0309       -0.5246                  -0.0006  -0.0019   0.0000                            -0.6307
+  KFRE-NA: net benefit > treat-all and > treat-none for thresholds 1%-50%
+  KFRE-nonNA: net benefit > treat-all and > treat-none for thresholds 1%-50%
+  TH-KFRE v1.0: net benefit > treat-all and > treat-none for thresholds 1%-50%

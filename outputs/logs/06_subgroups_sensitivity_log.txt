@@ -1,0 +1,61 @@
+A. SUBGROUPS
+  Age <65: n=310, KF events=48, deaths=14, observed 2-y KF=0.155
+    KFRE-NA       C 0.911  AUC 0.933  O/E 0.72 (0.58-0.85)  slope 1.28 (1.00-1.56)
+    KFRE-nonNA    C 0.911  AUC 0.933  O/E 0.91 (0.73-1.08)  slope 1.28 (1.00-1.56)
+    TH-KFRE v1.0  C 0.911  AUC 0.933  O/E 0.94 (0.77-1.12)  slope 0.95 (0.74-1.16)
+  Age >=65: n=747, KF events=42, deaths=54, observed 2-y KF=0.056
+    KFRE-NA       C 0.950  AUC 0.955  O/E 0.63 (0.48-0.79)  slope 1.56 (1.26-1.87)
+    KFRE-nonNA    C 0.950  AUC 0.955  O/E 0.87 (0.66-1.07)  slope 1.56 (1.26-1.87)
+    TH-KFRE v1.0  C 0.950  AUC 0.955  O/E 1.08 (0.83-1.33)  slope 1.17 (0.93-1.40)
+  Age 65-74: n=391, KF events=24, deaths=24, observed 2-y KF=0.062
+    KFRE-NA       C 0.944  AUC 0.949  O/E 0.58 (0.39-0.76)  slope 1.52 (1.11-1.94)
+    KFRE-nonNA    C 0.944  AUC 0.949  O/E 0.79 (0.55-1.01)  slope 1.52 (1.11-1.94)
+    TH-KFRE v1.0  C 0.944  AUC 0.949  O/E 0.96 (0.66-1.24)  slope 1.14 (0.83-1.44)
+  Age >=75: n=356, KF events=18, deaths=30, observed 2-y KF=0.051
+    KFRE-NA       C 0.961  AUC 0.961  O/E 0.73 (0.50-0.99)  slope n/a (<20 events)
+    KFRE-nonNA    C 0.961  AUC 0.961  O/E 1.01 (0.66-1.33)  slope n/a (<20 events)
+    TH-KFRE v1.0  C 0.961  AUC 0.961  O/E 1.30 (0.85-1.79)  slope n/a (<20 events)
+  Female: n=505, KF events=39, deaths=28, observed 2-y KF=0.077
+    KFRE-NA       C 0.915  AUC 0.924  O/E 0.62 (0.46-0.78)  slope 1.38 (1.05-1.71)
+    KFRE-nonNA    C 0.915  AUC 0.924  O/E 0.84 (0.64-1.05)  slope 1.38 (1.05-1.71)
+    TH-KFRE v1.0  C 0.915  AUC 0.924  O/E 0.98 (0.75-1.22)  slope 1.03 (0.78-1.27)
+  Male: n=552, KF events=51, deaths=40, observed 2-y KF=0.093
+    KFRE-NA       C 0.957  AUC 0.969  O/E 0.72 (0.60-0.86)  slope 1.35 (1.10-1.59)
+    KFRE-nonNA    C 0.957  AUC 0.969  O/E 0.93 (0.76-1.08)  slope 1.35 (1.10-1.59)
+    TH-KFRE v1.0  C 0.957  AUC 0.969  O/E 1.01 (0.84-1.19)  slope 1.00 (0.82-1.18)
+  eGFR >=30: n=636, KF events=6, deaths=34, observed 2-y KF=0.009
+    KFRE-NA       C 0.908  AUC 0.908  O/E 0.36 (0.12-0.67)  slope n/a (<20 events)
+    KFRE-nonNA    C 0.908  AUC 0.908  O/E 0.53 (0.17-0.94)  slope n/a (<20 events)
+    TH-KFRE v1.0  C 0.908  AUC 0.908  O/E 1.11 (0.37-2.06)  slope n/a (<20 events)
+  eGFR <30: n=421, KF events=84, deaths=34, observed 2-y KF=0.200
+    KFRE-NA       C 0.876  AUC 0.902  O/E 0.72 (0.61-0.83)  slope 1.34 (1.12-1.56)
+    KFRE-nonNA    C 0.876  AUC 0.902  O/E 0.93 (0.80-1.08)  slope 1.34 (1.12-1.56)
+    TH-KFRE v1.0  C 0.876  AUC 0.902  O/E 0.99 (0.85-1.13)  slope 1.00 (0.83-1.16)
+  UACR <300: n=592, KF events=5, deaths=35, observed 2-y KF=0.008
+    KFRE-NA       C 0.986  AUC 0.985  O/E 0.32 (0.07-0.60)  slope n/a (<20 events)
+    KFRE-nonNA    C 0.986  AUC 0.985  O/E 0.47 (0.10-0.87)  slope n/a (<20 events)
+    TH-KFRE v1.0  C 0.986  AUC 0.985  O/E 0.95 (0.23-1.75)  slope n/a (<20 events)
+  UACR >=300: n=465, KF events=85, deaths=33, observed 2-y KF=0.183
+    KFRE-NA       C 0.877  AUC 0.895  O/E 0.72 (0.61-0.84)  slope 1.30 (1.09-1.51)
+    KFRE-nonNA    C 0.877  AUC 0.895  O/E 0.94 (0.80-1.08)  slope 1.30 (1.09-1.51)
+    TH-KFRE v1.0  C 0.877  AUC 0.895  O/E 1.00 (0.86-1.15)  slope 0.97 (0.81-1.12)
+
+B1. OBSERVED RISK: death as competing event (Aalen-Johansen) vs censored (1 - Kaplan-Meier)
+  All        n=1057 deaths= 68  AJ 0.0853  KM 0.0890  (KM overstates by 0.0037);  TH-KFRE O/E: AJ 1.00 vs KM 1.04
+  Age <65    n= 310 deaths= 14  AJ 0.1549  KM 0.1596  (KM overstates by 0.0047);  TH-KFRE O/E: AJ 0.94 vs KM 0.97
+  Age 65-74  n= 391 deaths= 24  AJ 0.0615  KM 0.0642  (KM overstates by 0.0027);  TH-KFRE O/E: AJ 0.96 vs KM 1.00
+  Age >=75   n= 356 deaths= 30  AJ 0.0506  KM 0.0534  (KM overstates by 0.0027);  TH-KFRE O/E: AJ 1.30 vs KM 1.37
+
+B2/B3. DATA SENSITIVITY
+  Main analysis: n=1057, KF events=90
+    KFRE-NA       C 0.940  AUC 0.950  O/E 0.68 (0.58-0.77)  slope 1.34 (1.16-1.53)
+    KFRE-nonNA    C 0.940  AUC 0.950  O/E 0.89 (0.76-1.02)  slope 1.34 (1.16-1.53)
+    TH-KFRE v1.0  C 0.940  AUC 0.950  O/E 1.00 (0.85-1.15)  slope 1.00 (0.86-1.14)
+  B2: exclude UACR-corrected (n=10): n=1047, KF events=90
+    KFRE-NA       C 0.939  AUC 0.950  O/E 0.68 (0.57-0.78)  slope 1.34 (1.16-1.53)
+    KFRE-nonNA    C 0.939  AUC 0.950  O/E 0.89 (0.76-1.03)  slope 1.34 (1.16-1.53)
+    TH-KFRE v1.0  C 0.939  AUC 0.950  O/E 1.00 (0.85-1.15)  slope 1.00 (0.86-1.14)
+  B3: exclude extreme UACR 87,788.8: n=1056, KF events=89
+    KFRE-NA       C 0.939  AUC 0.950  O/E 0.67 (0.56-0.77)  slope 1.34 (1.16-1.53)
+    KFRE-nonNA    C 0.939  AUC 0.950  O/E 0.88 (0.75-1.02)  slope 1.34 (1.16-1.53)
+    TH-KFRE v1.0  C 0.939  AUC 0.950  O/E 0.99 (0.84-1.13)  slope 1.00 (0.86-1.14)

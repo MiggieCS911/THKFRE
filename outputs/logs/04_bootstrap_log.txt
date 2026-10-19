@@ -1,0 +1,32 @@
+BOOTSTRAP OPTIMISM CORRECTION (B = 1000, seed 20261016)
+Optimism-corrected performance:
+                   model  Harrell_C  AUC_2y    O_E  cal_slope  Brier  scaled_Brier    ICI    E90
+             M0a KFRE-NA     0.9396  0.9501 0.6755     1.3430 0.0458        0.4132 0.0406 0.1130
+          M0b KFRE-nonNA     0.9396  0.9501 0.8885     1.3430 0.0430        0.4480 0.0192 0.0384
+      M1 Recal. baseline     0.9394  0.9500 1.0032     1.3284 0.0437        0.4410 0.0178 0.0245
+M2 Recal. baseline+slope     0.9394  0.9500 1.0006     0.9939 0.0433        0.4462 0.0048 0.0149
+           M3a Refit Cox     0.9379  0.9479 0.9315     0.9571 0.0441        0.4350 0.0079 0.0260
+     M3b Refit Fine-Gray     0.9379  0.9480 0.9939     0.9691 0.0438        0.4399 0.0047 0.0150
+
+Optimism (apparent - corrected):
+                   model  Harrell_C  AUC_2y     O_E  cal_slope   Brier  scaled_Brier     ICI     E90
+             M0a KFRE-NA     0.0000  0.0000  0.0000     0.0000  0.0000        0.0000  0.0000  0.0000
+          M0b KFRE-nonNA     0.0000  0.0000  0.0000     0.0000  0.0000        0.0000  0.0000  0.0000
+      M1 Recal. baseline     0.0002  0.0001 -0.0032     0.0146 -0.0002        0.0021  0.0003 -0.0020
+M2 Recal. baseline+slope     0.0002  0.0001 -0.0020     0.0061 -0.0004        0.0044 -0.0030 -0.0093
+           M3a Refit Cox     0.0023  0.0021 -0.0026     0.0292 -0.0015        0.0178 -0.0022 -0.0064
+     M3b Refit Fine-Gray     0.0022  0.0022 -0.0026     0.0309 -0.0015        0.0182 -0.0040 -0.0128
+
+MODEL-SELECTION STABILITY
+  M2 slope across resamples: median 1.355 (2.5-97.5%: 1.190-1.557)
+  Refit (M3b) significantly better than M2 (p<0.05) in 65.0% of resamples
+
+TEMPORAL VALIDATION: develop 2021 (n=389, events=37) -> test 2022 (n=668, events=53)
+                   model  Harrell_C  AUC_2y    O_E  cal_slope  Brier  scaled_Brier    ICI    E90  O_E_lo  O_E_hi
+             M0a KFRE-NA     0.9389  0.9494 0.7168     1.2641 0.0407        0.4444 0.0314 0.0897  0.5702  0.8552
+          M0b KFRE-nonNA     0.9389  0.9494 0.9399     1.2641 0.0389        0.4686 0.0139 0.0255  0.7541  1.1214
+      M1 Recal. baseline     0.9389  0.9494 1.1348     1.2641 0.0400        0.4527 0.0162 0.0399  0.9195  1.3504
+M2 Recal. baseline+slope     0.9389  0.9494 1.1580     0.8424 0.0389        0.4689 0.0122 0.0412  0.9531  1.3847
+           M3a Refit Cox     0.9395  0.9494 1.1039     0.7941 0.0386        0.4724 0.0121 0.0364  0.9002  1.3096
+     M3b Refit Fine-Gray     0.9401  0.9505 1.1762     0.8280 0.0382        0.4781 0.0130 0.0426  0.9590  1.3912
+  2021-derived M2: slope 1.501, S0 0.99711

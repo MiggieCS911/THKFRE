@@ -1,0 +1,31 @@
+UPDATED MODEL SPECIFICATIONS
+  M1  Thai baseline S0(2y) = 0.98572
+  M2  slope b = 1.3430 (SE 0.0949); S0(2y) = 0.99464
+  M3a S0(2y) = 0.99423; means age10=6.9110, male=0.5222, egfr5=6.8052, ln_uacr=5.0924
+  M3b S0(2y) = 0.99462; means age10=6.9110, male=0.5222, egfr5=6.8052, ln_uacr=5.0924
+
+LIKELIHOOD-RATIO TESTS (Fine-Gray partial likelihood)
+            test  LR_chi2  df         p
+Slope: M2 vs b=1    14.64   1 0.0001304
+Refit: M3b vs M2    6.894   3   0.07535
+Heuristic shrinkage: M3a Cox = 0.988, M3b Fine-Gray = 0.988
+
+SAMPLE SIZE (Riley 2020): n = 1057, events = 90, outcome proportion = 0.085, Cox-Snell R2 = 0.280
+  criterion 1 (expected shrinkage >= 0.90), full refit (4 parameters): n required = 108
+  criterion 1 (expected shrinkage >= 0.90), recalibration (2 parameters): n required = 54
+  criterion 3 (2-y risk estimated within +/-0.05): n required = 120
+
+COEFFICIENTS (HR, 95% CI, p)
+  Age (per 10 years)             KFRE 0.802 | Cox 0.959 (0.796-1.154) p=0.655 | FG 0.905 (0.759-1.080) p=0.268
+  Male sex                       KFRE 1.280 | Cox 1.598 (1.024-2.494) p=0.039 | FG 1.404 (0.911-2.162) p=0.124
+  eGFR (per 5 mL/min/1.73 m2)    KFRE 0.573 | Cox 0.475 (0.416-0.544) p=1.58e-27 | FG 0.476 (0.415-0.546) p=1.54e-26
+  ln UACR (mg/g)                 KFRE 1.570 | Cox 2.256 (1.829-2.783) p=3.14e-14 | FG 2.194 (1.785-2.696) p=8.08e-14
+
+APPARENT PERFORMANCE (observed AJ 2-y incidence = 0.0853)
+                   model  Harrell_C  AUC_2y    O_E  cal_slope  Brier  scaled_Brier    ICI    E90  mean_predicted
+             M0a KFRE-NA     0.9396  0.9501 0.6755     1.3430 0.0458        0.4132 0.0406 0.1130          0.1262
+          M0b KFRE-nonNA     0.9396  0.9501 0.8885     1.3430 0.0430        0.4480 0.0192 0.0384          0.0960
+      M1 Recal. baseline     0.9396  0.9501 1.0000     1.3430 0.0434        0.4431 0.0182 0.0225          0.0853
+M2 Recal. baseline+slope     0.9396  0.9501 0.9986     1.0000 0.0429        0.4505 0.0018 0.0056          0.0854
+           M3a Refit Cox     0.9401  0.9500 0.9289     0.9863 0.0427        0.4528 0.0057 0.0196          0.0918
+     M3b Refit Fine-Gray     0.9402  0.9502 0.9913     1.0000 0.0423        0.4581 0.0007 0.0022          0.0860

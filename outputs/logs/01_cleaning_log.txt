@@ -1,0 +1,16 @@
+Raw file: validation_dataset_ThaiKFRE.xlsx  rows = 1062
+Rule 1a: UACR '< 1' set to 1.0 mg/g: n = 7 (study_id [146, 189, 209, 294, 303, 304, 329])
+Rule 1b: recorded UACR below detection limit [0.1, 0.9, 0.7] set to 1.0 mg/g: n = 3 (study_id [682, 834, 897])
+Rule 2: study_id 359: UACR from note '2723.2 (Repeated)' -> 2723.2 mg/g
+Rule 3: no UACR result -> exclude n = 2 (raw notes: ['-', nan] / [nan, 'ไม่มีสิ่งส่งตรวจ'])
+Rule 4: baseline eGFR >= 60 -> exclude n = 3 (eGFR [60.0, 60.0, 60.0])
+Deaths after day 730 (alive and event-free at 2 y -> censored at 730): n = 4 (days [935.0, 802.0, 887.0, 740.0])
+KRT after day 730 (counted as no event at 2 y): n = 19
+
+FINAL COHORT n = 1057
+  kidney failure within 2 y : 90 (8.5%)
+  death before KF           : 68 (6.4%)
+  censored before day 730 : 3
+  UACR range (mg/g)         : 1 - 87788.8
+  eGFR range                : 4.1 - 59.9
+  age range                 : 19 - 93

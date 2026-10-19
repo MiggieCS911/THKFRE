@@ -1,0 +1,39 @@
+Cohort n = 1057; KF events = 90; deaths = 68
+Observed 2-y cumulative incidence of KF (Aalen-Johansen) = 0.0853
+Observed 2-y cumulative incidence of death (Aalen-Johansen) = 0.0644
+Cross-check vs dataset prob_2y_4v: identical (<1e-9) for 1047 / 1057; differences only where UACR was corrected in step 1 (n = 10)
+
+PERFORMANCE (95% bootstrap CI)
+  KFRE-NA (S0=0.9750)
+    Harrell C              0.9396 (0.9201 - 0.9559)
+    AUC at 2 y             0.9501 (0.9294 - 0.9680)
+    O/E ratio              0.6755 (0.5774 - 0.7778)
+    Calibration slope      1.3430 (1.1842 - 1.5340)
+    Brier score            0.0458 (0.0383 - 0.0540)
+    Scaled Brier           0.4132 (0.3097 - 0.5062)
+    Mean predicted risk    0.1262 (0.1133 - 0.1391)
+    ICI / E50 / E90        0.0406 / 0.0225 / 0.1130
+  KFRE-nonNA (S0=0.9832)
+    Harrell C              0.9396 (0.9201 - 0.9559)
+    AUC at 2 y             0.9501 (0.9294 - 0.9680)
+    O/E ratio              0.8885 (0.7636 - 1.0207)
+    Calibration slope      1.3430 (1.1842 - 1.5340)
+    Brier score            0.0430 (0.0351 - 0.0518)
+    Scaled Brier           0.4480 (0.3680 - 0.5222)
+    Mean predicted risk    0.0960 (0.0854 - 0.1072)
+    ICI / E50 / E90        0.0192 / 0.0135 / 0.0384
+
+GROUPED CALIBRATION (predicted 2-y risk groups)
+                 model    group   n  events  predicted  observed_AJ
+   KFRE-NA (S0=0.9750)   0%-<2% 467       0      0.007        0.000
+   KFRE-NA (S0=0.9750)   2%-<6% 175       2      0.038        0.011
+   KFRE-NA (S0=0.9750)  6%-<10%  90       1      0.078        0.011
+   KFRE-NA (S0=0.9750) 10%-<20% 120       9      0.143        0.076
+   KFRE-NA (S0=0.9750) 20%-<40%  99      16      0.286        0.162
+   KFRE-NA (S0=0.9750)    >=40% 106      62      0.670        0.585
+KFRE-nonNA (S0=0.9832)   0%-<2% 523       1      0.006        0.002
+KFRE-nonNA (S0=0.9832)   2%-<6% 194       1      0.038        0.005
+KFRE-nonNA (S0=0.9832)  6%-<10%  77       2      0.079        0.026
+KFRE-nonNA (S0=0.9832) 10%-<20% 108      12      0.137        0.111
+KFRE-nonNA (S0=0.9832) 20%-<40%  86      27      0.284        0.314
+KFRE-nonNA (S0=0.9832)    >=40%  69      47      0.662        0.681

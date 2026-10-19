@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+message: "If you use this code or the TH-KFRE equation, please cite the accompanying article."
+title: "TH-KFRE: validation and recalibration of the 4-variable Kidney Failure Risk Equation in Thai patients with CKD"
+version: "1.0"
+date-released: 2026-10-16
+license: MIT
+repository-code: "https://github.com/MiggieCS911/THKFRE"
+authors:
+  - family-names: Pongsittisak
+    given-names: Wanjak
+    affiliation: "Faculty of Medicine Vajira Hospital, Navamindradhiraj University"
+  - family-names: Singharodjanakul
+    given-names: Chaiyong
+    affiliation: "Faculty of Medicine Vajira Hospital, Navamindradhiraj University"
+keywords:
+  - chronic kidney disease
+  - kidney failure risk equation
+  - prediction model
+  - competing risks
+  - Fine-Gray

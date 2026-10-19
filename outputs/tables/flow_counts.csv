@@ -1,0 +1,5 @@
+step,n
+Patients in analysis file,1062
+Excluded: no UACR result,2
+Excluded: eGFR >= 60,3
+Analysis cohort,1057
