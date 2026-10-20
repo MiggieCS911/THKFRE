@@ -1,0 +1,481 @@
+<title>TH-KFRE Calculator</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="TH-KFRE v1.0: 2-year kidney failure risk for Thai adults with CKD G3-G5 (recalibrated 4-variable Kidney Failure Risk Equation).">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+/* Layout: clinical form on the left, result panel on the right; stacks to one column on phones.
+   Colours follow the paper's figures: TH-KFRE blue, non-North American KFRE orange; KDIGO heat-map hues for risk. */
+:root {
+  --bg: #f3f6f7;
+  --surface: #ffffff;
+  --sunk: #eaf0f2;
+  --ink: #102029;
+  --muted: #566672;
+  --line: #d5dee3;
+  --accent: #1d6bcc;        /* TH-KFRE */
+  --accent-soft: #e3eefb;
+  --compare: #d6612a;       /* KFRE non-North American */
+  --low: #2e8b5e;
+  --mid: #c98a12;
+  --high: #c23b2b;
+  --low-bg: #e4f3eb;
+  --mid-bg: #fbf1dc;
+  --high-bg: #fbe5e2;
+  --g-green: #7cc79a; --g-yellow: #f2d46b; --g-orange: #f0a35e; --g-red: #e0705f;
+  --dot-off: #d9e2e7;
+  --focus: #1d6bcc;
+  --font-body: "Atkinson Hyperlegible", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-data: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --r: 10px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1519; --surface: #142028; --sunk: #0f1a20; --ink: #e6eef2; --muted: #9aabb6; --line: #26363f;
+    --accent: #6aa8f0; --accent-soft: #16304a; --compare: #f08a57;
+    --low: #5cc28d; --mid: #e3ae42; --high: #f0776a;
+    --low-bg: #12301f; --mid-bg: #33280f; --high-bg: #3a1a16;
+    --g-green: #3f8a5e; --g-yellow: #a8902f; --g-orange: #b26a2c; --g-red: #a8473a;
+    --dot-off: #2a3b45; --focus: #6aa8f0; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1519; --surface: #142028; --sunk: #0f1a20; --ink: #e6eef2; --muted: #9aabb6; --line: #26363f;
+  --accent: #6aa8f0; --accent-soft: #16304a; --compare: #f08a57;
+  --low: #5cc28d; --mid: #e3ae42; --high: #f0776a;
+  --low-bg: #12301f; --mid-bg: #33280f; --high-bg: #3a1a16;
+  --g-green: #3f8a5e; --g-yellow: #a8902f; --g-orange: #b26a2c; --g-red: #a8473a;
+  --dot-off: #2a3b45; --focus: #6aa8f0; color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.5;
+}
+.wrap {
+  max-width: 1120px; margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 24px 48px;
+  display: grid; gap: 20px;
+}
+header { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 8px 24px; }
+.brand { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.brand h1 { margin: 0; font-size: 1.9rem; letter-spacing: -0.01em; line-height: 1.1; }
+.brand h1 span { color: var(--accent); }
+.brand p { margin: 0; color: var(--muted); }
+.pill {
+  font-family: var(--font-data); font-size: 0.75rem; letter-spacing: 0.04em; text-transform: uppercase;
+  border: 1px solid var(--line); border-radius: 999px; padding: 3px 10px; color: var(--muted); white-space: nowrap;
+}
+
+.grid { display: grid; grid-template-columns: minmax(0, 400px) minmax(0, 1fr); gap: 20px; align-items: start; }
+@media (max-width: 860px) { .grid { grid-template-columns: minmax(0, 1fr); } }
+
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 20px; min-width: 0; }
+.card h2 {
+  margin: 0 0 14px; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 700;
+}
+
+form { display: grid; gap: 16px; }
+.field { display: grid; gap: 6px; }
+.field > label, .legend { font-weight: 700; }
+.hint { color: var(--muted); font-size: 0.85rem; }
+.row { display: flex; gap: 8px; align-items: stretch; }
+input[type="number"], select {
+  font: inherit; font-family: var(--font-data); font-size: 1.05rem; color: var(--ink);
+  background: var(--sunk); border: 1px solid var(--line); border-radius: 8px; padding: 9px 12px; min-width: 0; width: 100%;
+}
+select { font-family: var(--font-body); font-size: 0.95rem; width: auto; flex: 0 0 auto; }
+input:focus-visible, select:focus-visible, button:focus-visible, summary:focus-visible, .seg input:focus-visible + span {
+  outline: 3px solid var(--focus); outline-offset: 2px;
+}
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; width: fit-content; }
+.seg label { position: relative; cursor: pointer; }
+.seg input { position: absolute; opacity: 0; inset: 0; cursor: pointer; }
+.seg span { display: block; padding: 8px 18px; background: var(--sunk); color: var(--muted); font-weight: 700; }
+.seg label + label span { border-left: 1px solid var(--line); }
+.seg input:checked + span { background: var(--accent); color: #fff; }
+
+.calc-cr { border: 1px dashed var(--line); border-radius: 8px; padding: 12px; display: grid; gap: 10px; background: var(--bg); }
+.calc-cr[hidden] { display: none !important; }
+.linkbtn {
+  font: inherit; font-size: 0.9rem; color: var(--accent); background: none; border: 0; padding: 0; cursor: pointer;
+  text-decoration: underline; text-underline-offset: 3px; justify-self: start;
+}
+.btn {
+  font: inherit; font-weight: 700; border-radius: 8px; padding: 9px 14px; cursor: pointer;
+  border: 1px solid var(--accent); background: var(--accent); color: #fff;
+}
+.btn.ghost { background: transparent; color: var(--accent); }
+.btns { display: flex; gap: 8px; flex-wrap: wrap; }
+
+.alerts { display: grid; gap: 8px; }
+.alert { border-left: 4px solid var(--mid); background: var(--mid-bg); padding: 8px 12px; border-radius: 0 8px 8px 0; font-size: 0.92rem; }
+.alert.stop { border-color: var(--high); background: var(--high-bg); }
+
+/* ---------- result */
+.result { display: grid; gap: 20px; }
+.headline { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 6px 20px; align-items: center; }
+@media (max-width: 520px) { .headline { grid-template-columns: minmax(0, 1fr); } }
+.big { font-family: var(--font-data); font-weight: 600; font-size: clamp(3rem, 9vw, 4.6rem); line-height: 1; color: var(--accent); font-variant-numeric: tabular-nums; }
+.big small { font-size: 0.45em; font-weight: 500; }
+.headline .sub { display: grid; gap: 4px; }
+.band {
+  display: inline-flex; align-items: center; gap: 8px; width: fit-content;
+  font-weight: 700; border-radius: 999px; padding: 4px 12px; font-size: 0.95rem;
+}
+.band::before { content: ""; width: 10px; height: 10px; border-radius: 50%; background: currentColor; }
+.band.low { color: var(--low); background: var(--low-bg); }
+.band.mid { color: var(--mid); background: var(--mid-bg); }
+.band.high { color: var(--high); background: var(--high-bg); }
+.compare { color: var(--muted); font-size: 0.95rem; }
+.compare b { color: var(--compare); font-family: var(--font-data); }
+
+.scale { display: grid; gap: 6px; }
+.scale svg { width: 100%; height: auto; display: block; overflow: visible; }
+.action { border-radius: 8px; padding: 12px 14px; background: var(--sunk); }
+.action strong { display: block; margin-bottom: 2px; }
+
+.two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; }
+@media (max-width: 640px) { .two { grid-template-columns: minmax(0, 1fr); } }
+.dots { display: grid; grid-template-columns: repeat(10, 1fr); gap: 5px; max-width: 260px; }
+.dot { aspect-ratio: 1; border-radius: 50%; background: var(--dot-off); }
+.dot.on { background: var(--accent); }
+.dotcap { margin-top: 10px; font-size: 0.95rem; }
+
+.kdigo { border-collapse: separate; border-spacing: 3px; font-size: 0.8rem; width: 100%; max-width: 300px; }
+.kdigo th { color: var(--muted); font-weight: 700; font-family: var(--font-data); padding: 2px 4px; text-align: center; }
+.kdigo th.rowh { text-align: left; }
+.kdigo td { height: 26px; border-radius: 4px; text-align: center; font-weight: 700; color: #102029; }
+.kdigo td.green { background: var(--g-green); } .kdigo td.yellow { background: var(--g-yellow); }
+.kdigo td.orange { background: var(--g-orange); } .kdigo td.red { background: var(--g-red); }
+.kdigo td.you { outline: 3px solid var(--ink); outline-offset: -1px; }
+.kcap { font-size: 0.85rem; color: var(--muted); margin-top: 6px; }
+
+.summary { display: grid; gap: 8px; }
+.summary pre {
+  margin: 0; white-space: pre-wrap; word-break: break-word; font-family: var(--font-data); font-size: 0.85rem;
+  background: var(--sunk); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px;
+}
+.copied { color: var(--low); font-size: 0.9rem; min-height: 1.2em; }
+
+details { border-top: 1px solid var(--line); padding-top: 12px; }
+summary { cursor: pointer; font-weight: 700; }
+details .eq { font-family: var(--font-data); font-size: 0.85rem; overflow-x: auto; background: var(--sunk); padding: 10px 12px; border-radius: 8px; }
+.eq p { margin: 0 0 6px; white-space: nowrap; }
+.prose { max-width: 70ch; }
+.prose p { margin: 8px 0; }
+footer { color: var(--muted); font-size: 0.85rem; display: grid; gap: 6px; }
+footer p { margin: 0; max-width: 90ch; }
+.example-tag { font-family: var(--font-data); font-size: 0.75rem; color: var(--accent); background: var(--accent-soft); padding: 2px 8px; border-radius: 999px; }
+@media (prefers-reduced-motion: no-preference) { .dot { transition: background-color .25s ease; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <h1>TH<span>-</span>KFRE</h1>
+      <p>2-year kidney failure risk for Thai adults with CKD G3–G5</p>
+    </div>
+    <span class="pill">v1.0 · preview · not yet peer reviewed</span>
+  </header>
+
+  <div class="grid">
+    <!-- ================= inputs -->
+    <section class="card" aria-labelledby="in-h">
+      <h2 id="in-h">Patient</h2>
+      <form id="f" novalidate>
+        <div class="field">
+          <label for="age">Age</label>
+          <div class="row"><input id="age" type="number" inputmode="decimal" min="18" max="110" step="1" value="60"><span class="hint" style="align-self:center">years</span></div>
+        </div>
+
+        <div class="field" role="radiogroup" aria-labelledby="sex-l">
+          <span class="legend" id="sex-l">Sex</span>
+          <div class="seg">
+            <label><input type="radio" name="sex" id="sex-m" value="1" checked><span>Male</span></label>
+            <label><input type="radio" name="sex" id="sex-f" value="0"><span>Female</span></label>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="egfr">eGFR</label>
+          <div class="row"><input id="egfr" type="number" inputmode="decimal" min="1" max="200" step="0.1" value="20"><span class="hint" style="align-self:center;white-space:nowrap">mL/min/1.73 m²</span></div>
+          <button type="button" class="linkbtn" id="cr-toggle" aria-expanded="false" aria-controls="cr-box">Calculate from creatinine (CKD-EPI 2021)</button>
+          <div class="calc-cr" id="cr-box" hidden>
+            <label for="cr">Serum creatinine</label>
+            <div class="row">
+              <input id="cr" type="number" inputmode="decimal" min="0.1" step="0.01" placeholder="e.g. 3.1">
+              <select id="cr-unit" aria-label="Creatinine unit"><option value="mgdl">mg/dL</option><option value="umol">µmol/L</option></select>
+            </div>
+            <span class="hint" id="cr-out">Uses the age and sex above. The eGFR box fills in as you type.</span>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="uacr">Urine albumin-to-creatinine ratio (UACR)</label>
+          <div class="row">
+            <input id="uacr" type="number" inputmode="decimal" min="0" step="any" value="1000">
+            <select id="uacr-unit" aria-label="UACR unit"><option value="mgg">mg/g</option><option value="mgmmol">mg/mmol</option></select>
+          </div>
+          <span class="hint">Results reported as "&lt;1 mg/g" are entered as 1, as in the study.</span>
+        </div>
+
+        <div class="alerts" id="alerts" aria-live="polite"></div>
+
+        <div class="btns">
+          <button type="button" class="btn ghost" id="example">Load example patient</button>
+          <button type="button" class="btn ghost" id="clear">Clear</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- ================= result -->
+    <section class="card result" aria-labelledby="out-h" aria-live="polite">
+      <h2 id="out-h" style="margin-bottom:0">2-year risk of kidney failure <span class="example-tag" id="ex-tag">example patient</span></h2>
+
+      <div class="headline">
+        <div class="big" id="big">–</div>
+        <div class="sub">
+          <span class="band" id="band">–</span>
+          <span class="compare" id="cmp"></span>
+        </div>
+      </div>
+
+      <div class="scale">
+        <svg id="scale" viewBox="0 0 600 64" role="img" aria-label="Risk scale from 0 to 100 percent with thresholds at 10 and 40 percent"></svg>
+      </div>
+
+      <div class="action" id="action"></div>
+
+      <div class="two">
+        <div>
+          <h2>For the patient</h2>
+          <div class="dots" id="dots" aria-hidden="true"></div>
+          <p class="dotcap" id="dotcap"></p>
+        </div>
+        <div>
+          <h2>KDIGO category</h2>
+          <table class="kdigo" id="kdigo" aria-label="KDIGO GFR and albuminuria grid"></table>
+          <p class="kcap" id="kcap"></p>
+        </div>
+      </div>
+
+      <div class="summary">
+        <h2 style="margin:0">For the clinical note</h2>
+        <pre id="note"></pre>
+        <div class="btns"><button type="button" class="btn" id="copy">Copy summary</button><span class="copied" id="copied" aria-live="polite"></span></div>
+      </div>
+    </section>
+  </div>
+
+  <section class="card prose" aria-labelledby="about-h">
+    <h2 id="about-h">About TH-KFRE</h2>
+    <p>TH-KFRE is the 4-variable Kidney Failure Risk Equation (Tangri et al., JAMA 2011) recalibrated for Thai patients. It keeps the original coefficients and changes two numbers: the baseline risk and one slope that stretches the risk score. It was developed in 1,057 adults with CKD G3–G5 seen at the nephrology clinic of Faculty of Medicine Vajira Hospital, Bangkok, in 2021–2022 and followed for 2 years (90 kidney failure events). Death before kidney failure was treated as a competing event.</p>
+    <p>Kidney failure means maintenance dialysis for more than 3 months or kidney transplantation. In the study cohort the KFRE ranked patients well (C statistic 0.94). The published non-North American KFRE overestimated low risks; TH-KFRE corrected this (optimism-corrected calibration slope 0.99).</p>
+    <details>
+      <summary>Equation</summary>
+      <div class="eq">
+        <p>LP = −0.2201 × (age/10 − 7.036) + 0.2467 × (male − 0.5642)</p>
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;− 0.5567 × (eGFR/5 − 7.222) + 0.4510 × (ln UACR[mg/g] − 5.137)</p>
+        <p>TH-KFRE 2-year risk = 1 − 0.99464 ^ exp(1.343 × LP)</p>
+        <p>KFRE non-North American = 1 − 0.9832 ^ exp(LP)</p>
+        <p>eGFR (CKD-EPI 2021) = 142 × min(Scr/κ,1)^α × max(Scr/κ,1)^−1.200 × 0.9938^age × 1.012 [female]</p>
+        <p>κ = 0.7 (F) / 0.9 (M); α = −0.241 (F) / −0.302 (M); Scr in mg/dL (µmol/L ÷ 88.4)</p>
+      </div>
+    </details>
+    <details>
+      <summary>Who it is for, and limits</summary>
+      <p>Adults with CKD G3–G5 (eGFR below 60) who are not on dialysis and have not had a transplant. It gives a 2-year risk only; there is no 5-year TH-KFRE.</p>
+      <p>It has been validated internally in one hospital. It has not yet been tested in other Thai hospitals or in primary care. In patients aged 75 or older the study suggested it may underestimate risk. Use it to support, not replace, clinical judgement.</p>
+    </details>
+  </section>
+
+  <footer>
+    <p>Nothing you enter leaves this page: the calculation runs in your browser and nothing is stored.</p>
+    <p>Thresholds follow KDIGO 2024: 2-year risk ≥10% for multidisciplinary CKD care, ≥40% to prepare for kidney replacement therapy. Code and validation: github.com/MiggieCS911/THKFRE. Citation: Pongsittisak W, et al. TH-KFRE (manuscript submitted).</p>
+  </footer>
+</div>
+
+<script>
+/* ===== THKFRE-CALC-BEGIN (tested against the Python implementation) ===== */
+const KFRE = {
+  beta: { age10: -0.2201, male: 0.2467, egfr5: -0.5567, lnuacr: 0.4510 },
+  mean: { age10: 7.036,  male: 0.5642, egfr5: 7.222,  lnuacr: 5.137 },
+  s0NA: 0.9750, s0nonNA: 0.9832,
+  thSlope: 1.343, thS0: 0.99464,
+};
+function kfreLP(age, male, egfr, uacrMgG) {
+  const u = Math.max(uacrMgG, 1);   // detection limit, as in the study
+  return KFRE.beta.age10 * (age / 10 - KFRE.mean.age10)
+       + KFRE.beta.male * (male - KFRE.mean.male)
+       + KFRE.beta.egfr5 * (egfr / 5 - KFRE.mean.egfr5)
+       + KFRE.beta.lnuacr * (Math.log(u) - KFRE.mean.lnuacr);
+}
+function riskFromLP(lp, s0) { return 1 - Math.pow(s0, Math.exp(lp)); }
+function thkfreRisk(age, male, egfr, uacr) { return riskFromLP(KFRE.thSlope * kfreLP(age, male, egfr, uacr), KFRE.thS0); }
+function kfreNonNA(age, male, egfr, uacr) { return riskFromLP(kfreLP(age, male, egfr, uacr), KFRE.s0nonNA); }
+function kfreNA(age, male, egfr, uacr) { return riskFromLP(kfreLP(age, male, egfr, uacr), KFRE.s0NA); }
+function ckdEpi2021(scrMgDl, age, male) {
+  const k = male ? 0.9 : 0.7, a = male ? -0.302 : -0.241, r = scrMgDl / k;
+  return 142 * Math.pow(Math.min(r, 1), a) * Math.pow(Math.max(r, 1), -1.2) * Math.pow(0.9938, age) * (male ? 1 : 1.012);
+}
+const MGMMOL_TO_MGG = 8.84;
+/* ===== THKFRE-CALC-END ===== */
+
+const $ = (id) => document.getElementById(id);
+const EXAMPLE = { age: 60, male: 1, egfr: 20, uacr: 1000 };
+let isExample = true;
+
+function num(id) { const v = parseFloat($(id).value); return Number.isFinite(v) ? v : null; }
+function sexMale() { return $("sex-m").checked ? 1 : 0; }
+function uacrMgG() { const v = num("uacr"); if (v === null) return null; return $("uacr-unit").value === "mgmmol" ? v * MGMMOL_TO_MGG : v; }
+function pct(x, d = 1) { return (x * 100).toFixed(d) + "%"; }
+
+function bandOf(r) { return r >= 0.40 ? "high" : r >= 0.10 ? "mid" : "low"; }
+const BAND_TEXT = { low: "Below 10%", mid: "10% to 39%", high: "40% or higher" };
+const ACTION = {
+  low: ["Usual CKD care", "Continue routine nephrology or primary care follow-up and treat CKD risk factors. Recalculate when eGFR or UACR changes."],
+  mid: ["Multidisciplinary CKD care", "Refer to a multidisciplinary CKD clinic (nephrologist, nurse, dietitian, pharmacist) and start education about kidney failure and treatment options."],
+  high: ["Prepare for kidney replacement therapy", "Discuss dialysis modality, conservative care and transplantation; plan vascular access or a peritoneal catheter in time."],
+};
+
+function gStage(e) { return e >= 90 ? 0 : e >= 60 ? 1 : e >= 45 ? 2 : e >= 30 ? 3 : e >= 15 ? 4 : 5; }
+function aStage(u) { return u < 30 ? 0 : u < 300 ? 1 : 2; }
+const G_LABEL = ["G1", "G2", "G3a", "G3b", "G4", "G5"];
+const A_LABEL = ["A1", "A2", "A3"];
+const HEAT = [
+  ["green", "yellow", "orange"], ["green", "yellow", "orange"], ["yellow", "orange", "red"],
+  ["orange", "red", "red"], ["red", "red", "red"], ["red", "red", "red"],
+];
+
+function drawKdigo(g, a) {
+  let h = "<thead><tr><th></th>" + A_LABEL.map((x) => `<th scope="col">${x}</th>`).join("") + "</tr></thead><tbody>";
+  for (let i = 0; i < 6; i++) {
+    h += `<tr><th scope="row" class="rowh">${G_LABEL[i]}</th>`;
+    for (let j = 0; j < 3; j++) {
+      const you = g === i && a === j;
+      h += `<td class="${HEAT[i][j]}${you ? " you" : ""}">${you ? "●" : ""}</td>`;
+    }
+    h += "</tr>";
+  }
+  $("kdigo").innerHTML = h + "</tbody>";
+  $("kcap").textContent = g === null ? "" : `${G_LABEL[g]} ${A_LABEL[a]}. The grid shows CKD category; TH-KFRE gives the patient's own absolute risk within it.`;
+}
+
+function drawScale(th, nn) {
+  const W = 600, x0 = 8, x1 = 592, y = 30, sx = (p) => x0 + (x1 - x0) * Math.min(Math.max(p, 0), 1);
+  const css = getComputedStyle(document.documentElement);
+  const c = (n) => css.getPropertyValue(n).trim();
+  let s = "";
+  s += `<rect x="${x0}" y="${y - 5}" width="${sx(0.10) - x0}" height="10" rx="5" fill="${c("--low-bg")}"/>`;
+  s += `<rect x="${sx(0.10)}" y="${y - 5}" width="${sx(0.40) - sx(0.10)}" height="10" fill="${c("--mid-bg")}"/>`;
+  s += `<rect x="${sx(0.40)}" y="${y - 5}" width="${x1 - sx(0.40)}" height="10" rx="5" fill="${c("--high-bg")}"/>`;
+  for (const t of [0, 0.1, 0.4, 1]) {
+    s += `<line x1="${sx(t)}" x2="${sx(t)}" y1="${y + 7}" y2="${y + 13}" stroke="${c("--muted")}" stroke-width="1"/>`;
+    s += `<text x="${sx(t)}" y="${y + 27}" font-size="12" font-family="IBM Plex Mono, monospace" fill="${c("--muted")}" text-anchor="${t === 0 ? "start" : t === 1 ? "end" : "middle"}">${Math.round(t * 100)}%</text>`;
+  }
+  if (nn !== null) {
+    s += `<circle cx="${sx(nn)}" cy="${y}" r="6" fill="${c("--surface")}" stroke="${c("--compare")}" stroke-width="2.5"/>`;
+  }
+  if (th !== null) {
+    s += `<path d="M ${sx(th)} ${y - 9} l -7 -11 h 14 z" fill="${c("--accent")}"/>`;
+    s += `<circle cx="${sx(th)}" cy="${y}" r="7" fill="${c("--accent")}"/>`;
+  }
+  $("scale").innerHTML = s;
+}
+
+function drawDots(r) {
+  const on = r === null ? 0 : Math.round(r * 100);
+  let h = "";
+  for (let i = 0; i < 100; i++) h += `<div class="dot${i < on ? " on" : ""}"></div>`;
+  $("dots").innerHTML = h;
+  $("dotcap").textContent = r === null ? "" :
+    on === 0 ? "Fewer than 1 in 100 people with these results start dialysis or receive a kidney transplant within 2 years."
+    : `About ${on} in 100 people with these results start dialysis or receive a kidney transplant within 2 years. The other ${100 - on} do not.`;
+}
+
+function alertsFor(age, egfr, uacr) {
+  const a = [];
+  if (age !== null && age < 18) a.push(["stop", "TH-KFRE is for adults aged 18 or older."]);
+  if (egfr !== null && egfr >= 60) a.push(["stop", "eGFR is 60 or higher. TH-KFRE was developed in CKD G3–G5 (eGFR below 60) and does not apply."]);
+  if (egfr !== null && egfr < 5) a.push(["warn", "eGFR below 5 is outside the range seen in the study (lowest 4.1). If the patient already needs dialysis, a risk estimate is not needed."]);
+  if (age !== null && age >= 75) a.push(["warn", "Age 75 or older: the study suggested TH-KFRE may underestimate risk in this group."]);
+  if (age !== null && age > 93) a.push(["warn", "Age above 93 is outside the study range (oldest 93)."]);
+  if (uacr !== null && uacr > 9000) a.push(["warn", "UACR above 9,000 mg/g is beyond the 99th percentile of the study cohort; interpret with care."]);
+  $("alerts").innerHTML = a.map(([k, t]) => `<div class="alert${k === "stop" ? " stop" : ""}">${t}</div>`).join("");
+  return a.some(([k]) => k === "stop");
+}
+
+function update() {
+  const age = num("age"), male = sexMale(), egfr = num("egfr"), uacr = uacrMgG();
+  $("ex-tag").hidden = !isExample;
+  const stop = alertsFor(age, egfr, uacr);
+  const ok = age !== null && egfr !== null && egfr > 0 && uacr !== null && uacr >= 0 && !stop;
+  if (!ok) {
+    $("big").innerHTML = "–";
+    $("band").className = "band"; $("band").textContent = stop ? "Not applicable" : "Enter all four values";
+    $("cmp").textContent = ""; $("action").innerHTML = "";
+    drawScale(null, null); drawDots(null);
+    drawKdigo(egfr !== null && uacr !== null ? gStage(egfr) : null, uacr !== null ? aStage(uacr) : null);
+    $("note").textContent = "Complete the form to generate a summary.";
+    return;
+  }
+  const th = thkfreRisk(age, male, egfr, uacr), nn = kfreNonNA(age, male, egfr, uacr);
+  const b = bandOf(th);
+  $("big").innerHTML = (th * 100).toFixed(1) + "<small>%</small>";
+  $("band").className = "band " + b; $("band").textContent = BAND_TEXT[b];
+  $("cmp").innerHTML = `Published KFRE (non-North American): <b>${pct(nn)}</b>`;
+  $("action").innerHTML = `<strong>${ACTION[b][0]}</strong>${ACTION[b][1]}`;
+  drawScale(th, nn); drawDots(th); drawKdigo(gStage(egfr), aStage(uacr));
+  const uTxt = $("uacr-unit").value === "mgmmol" ? `${num("uacr")} mg/mmol (${uacr.toFixed(0)} mg/g)` : `${uacr} mg/g`;
+  $("note").textContent =
+    `TH-KFRE v1.0 2-year kidney failure risk: ${pct(th)} (${BAND_TEXT[b]}; ${ACTION[b][0].toLowerCase()}).\n` +
+    `Published KFRE, non-North American: ${pct(nn)}.\n` +
+    `Inputs: age ${age} y, ${male ? "male" : "female"}, eGFR ${egfr} mL/min/1.73 m², UACR ${uTxt}; ${G_LABEL[gStage(egfr)]}${A_LABEL[aStage(uacr)]}.`;
+}
+
+function updateCr() {
+  const cr = num("cr"), age = num("age");
+  if (cr === null || cr <= 0) { $("cr-out").textContent = "Uses the age and sex above. The eGFR box fills in as you type."; return; }
+  if (age === null) { $("cr-out").textContent = "Enter age first."; return; }
+  const mg = $("cr-unit").value === "umol" ? cr / 88.4 : cr;
+  const e = ckdEpi2021(mg, age, sexMale());
+  $("egfr").value = e.toFixed(1);
+  $("cr-out").textContent = `CKD-EPI 2021: eGFR ${e.toFixed(1)} mL/min/1.73 m² (creatinine ${mg.toFixed(2)} mg/dL).`;
+}
+
+function edited() { isExample = false; update(); }
+["age", "egfr", "uacr"].forEach((id) => $(id).addEventListener("input", () => { if (id === "age" && !$("cr-box").hidden) updateCr(); edited(); }));
+["sex-m", "sex-f"].forEach((id) => $(id).addEventListener("change", () => { if (!$("cr-box").hidden) updateCr(); edited(); }));
+$("uacr-unit").addEventListener("change", edited);
+$("cr").addEventListener("input", () => { updateCr(); edited(); });
+$("cr-unit").addEventListener("change", () => { updateCr(); edited(); });
+$("cr-toggle").addEventListener("click", () => {
+  const box = $("cr-box"); box.hidden = !box.hidden;
+  $("cr-toggle").setAttribute("aria-expanded", String(!box.hidden));
+  if (!box.hidden) $("cr").focus();
+});
+$("example").addEventListener("click", () => {
+  $("age").value = EXAMPLE.age; $("sex-m").checked = true; $("egfr").value = EXAMPLE.egfr;
+  $("uacr").value = EXAMPLE.uacr; $("uacr-unit").value = "mgg"; $("cr").value = "";
+  isExample = true; update();
+});
+$("clear").addEventListener("click", () => {
+  ["age", "egfr", "uacr", "cr"].forEach((id) => ($(id).value = ""));
+  isExample = false; update(); $("age").focus();
+});
+$("f").addEventListener("submit", (e) => e.preventDefault());
+$("copy").addEventListener("click", () => {
+  const t = $("note").textContent;
+  const done = () => { $("copied").textContent = "Copied"; setTimeout(() => ($("copied").textContent = ""), 2000); };
+  const fallback = () => { const r = document.createRange(); r.selectNodeContents($("note")); const s = getSelection(); s.removeAllRanges(); s.addRange(r); $("copied").textContent = "Selected. Press Ctrl/Cmd + C to copy."; };
+  try { navigator.clipboard.writeText(t).then(done, fallback); } catch (e) { fallback(); }
+});
+const mq = window.matchMedia("(prefers-color-scheme: dark)");
+mq.addEventListener && mq.addEventListener("change", update);
+new MutationObserver(update).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+update();
+</script>
